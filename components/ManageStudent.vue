@@ -9,14 +9,9 @@
             <h1 class="text-2xl font-semibold mb-2">{{ title }} Student Profile</h1>
             <UForm :state="student" :schema="StudentSchema" @submit="createStudent" class="space-y-4">
 
-                <div class="grid md:grid-cols-2 gap-2">
-                    <UFormGroup label="Name" name="name">
-                        <UInput v-model="student.name" placeholder="Name" />
-                    </UFormGroup>
-                    <UFormGroup label="Nickname" name="nickname">
-                        <UInput v-model="student.nickname" placeholder="NicknName" />
-                    </UFormGroup>
-                </div>
+                <UFormGroup label="Name" name="name">
+                    <UInput v-model="student.name" placeholder="Name" />
+                </UFormGroup>
 
 
                 <UFormGroup label="Institute" name="institute">
@@ -109,7 +104,7 @@
                     <UInput v-model="student.dob" type="date" placeholder="Date of Birth" />
                 </UFormGroup>
 
-                
+
                 <p class="font-semibold text-blue-500">
                     Payment History
                 </p>
@@ -119,7 +114,7 @@
                         <UInput v-model="student.payment_emis[i].amount" type="number" placeholder="Amount" />
                     </UFormGroup>
                     <UFormGroup label="Month">
-                        <USelectMenu v-model="student.payment_emis[i].month" :options="months"  />
+                        <USelectMenu v-model="student.payment_emis[i].month" :options="months" />
                     </UFormGroup>
                     <UFormGroup label="Date">
                         <UInput v-model="student.payment_emis[i].date" type="date" />
@@ -137,18 +132,20 @@
                         Add Payment
                     </UButton>
                 </div>
-               
+
 
 
                 <ProfileAvatar @update="uploadProfileImage" :avatar="student.image" :name="student.name">
                 </ProfileAvatar>
 
-                
+
                 <UFormGroup label="Password">
                     <UInput v-model="student.password" placeholder="Password" />
                 </UFormGroup>
 
-                <UButton block color="green" class="mt-3" type="submit">{{ title=='Edit'?'Update':'Create' }} Student</UButton>
+                <UButton block color="green" class="mt-3" type="submit">{{ title == 'Edit' ? 'Update' : 'Create' }}
+                    Student
+                </UButton>
             </UForm>
         </div>
     </USlideover>
@@ -159,7 +156,7 @@ const { $axios, $storage } = useNuxtApp()
 import { ref as storageRef, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 
 import StudentSchema from '~/schemas/Student.schema';
-import { hsc_batches,months,batch_times } from '~/data/batch'
+import { hsc_batches, months, batch_times } from '~/data/batch'
 const props = defineProps({
     student: {
         type: Object,
@@ -191,6 +188,7 @@ const student = ref({
     phone: props.student.phone || props.phone || '',
     sms: props.student.sms || '',
     batch: props.student.batch || '',
+    batch_time: props.student.batch_time || '',
     institute: props.student.institute || '',
     same_address: props.student.same_address || false,
     present_address: {
@@ -203,16 +201,16 @@ const student = ref({
         district: props.student.permanent_address?.district || '',
         address: props.student.permanent_address?.address || ''
     },
-    payment_emis: props.student.payment_emis ? 
+    payment_emis: props.student.payment_emis ?
         props.student.payment_emis.map(emi => ({
             ...emi,
             date: formatInputDate(new Date(emi.date))
-        })) 
-    : [{
-        amount: '',
-        date: formatInputDate(new Date()),
-        month: ''
-    }],
+        }))
+        : [{
+            amount: '',
+            date: formatInputDate(new Date()),
+            month: ''
+        }],
     form: props.student.form || '',
     image: props.student.image || '',
     password: props.student.password || '',
@@ -226,7 +224,7 @@ watch(student.value, (newVal) => {
         student.value.password = phone
     }
     if (newVal.same_address) {
-        student.permanent_address = student.present_address
+        student.value.permanent_address = student.value.present_address
     }
 })
 
@@ -341,6 +339,7 @@ const addEmi = () => {
     student.value.payment_emis.push({
         amount: '',
         date: formatInputDate(new Date()),
+        month: '',
         collector: $userStore.user?._id
     })
 }
@@ -352,7 +351,7 @@ const removeEmi = (index) => {
 
 watch(student, (value) => {
     const totalPaid = value.payment_emis.reduce((acc, emi) => acc + Number(emi.amount), 0)
-    student.value.paid_amount = totalPaid    
+    student.value.paid_amount = totalPaid
 }, {
     deep: true
 })

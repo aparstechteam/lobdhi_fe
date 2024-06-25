@@ -7,9 +7,10 @@
         </div>
 
         <ClientOnly>
-            <div class="w-[250px] mx-auto my-4 border">
-                <!-- <QrStream @decode="onDecode" /> -->
-                <QrCapture @decode="onDecode" />
+            <div
+                class="w-[170px] md:w-[200px] rounded-lg border-yellow-500 overflow-hidden shadow border-2  mx-auto my-4">
+
+                <QrStream @decode="onDecode" />
             </div>
         </ClientOnly>
 
