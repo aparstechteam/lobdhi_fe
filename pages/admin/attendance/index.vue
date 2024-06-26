@@ -94,7 +94,7 @@
 </template>
 
 <script setup>
-import { hsc_batches,batch_times } from '~/data/batch';
+import { hsc_batches, batch_times } from '~/data/batch';
 const { $axios, } = useNuxtApp()
 const data = ref(null)
 const batch = ref(null)
@@ -151,7 +151,7 @@ const getAttendance = async () => {
 const students = computed(() => {
     if (data.value) {
         return data.value.filter((s) => {
-            return s.name.toLowerCase().includes(search.value.toLowerCase())
+            return s.name.toLowerCase().includes(search.value.toLowerCase()) || (s.roll && s.roll.toString().includes(search.value))
         })
     }
     return []

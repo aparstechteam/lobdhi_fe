@@ -162,7 +162,7 @@ getStudents()
 
 const searchStudent = () => {
     if (search.value) {
-        data.value = allData.value.filter(student => student.name.toLowerCase().includes(search.value.toLowerCase()))
+        data.value = allData.value.filter(student => student.name.toLowerCase().includes(search.value.toLowerCase()) || student.phone.includes(search.value) || (student.roll && student.roll.toString().includes(search.value)))
     } else {
         data.value = allData.value
 
