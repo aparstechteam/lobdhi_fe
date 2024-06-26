@@ -1,6 +1,6 @@
 <template>
     <div v-if="user" class=" ">
-        <div class="max-w-6xl mx-auto px-14 py-8 font-semibold invoice">
+        <div id="invoice" class="max-w-6xl mx-auto px-14 py-8 font-semibold invoice">
             <div class="flex justify-between items-center mb-4">
                 <div class="text-3xl font-bold text-[#f1a948]">MONEY RECEIPT</div>
                 <div class="flex items-center ">
@@ -121,7 +121,7 @@ const downloadInvoice = () => {
     const invoice = document.getElementById('invoice')
 
     // custom filename
-    const filename = `invoice-${enrollment.value._id}.pdf`
+    const filename = `invoice-${user.value._id}.pdf`
 
     html2pdf().from(invoice).set(
         {
@@ -137,8 +137,8 @@ const downloadInvoice = () => {
             },
             jsPDF: {
                 unit: 'in',
-                format: 'a4',
-                orientation: 'portrait'
+                format: 'legal',
+                orientation: 'landscape'
             }
         }
     ).save()
