@@ -75,8 +75,13 @@
                                     <div class="flex gap-3">
                                         <AttendanceReport :student="student" />
                                         <MaterialsDistribution :student="student" />
-                                        <ManageStudent :student="student" title="Edit" icon="lucide:edit"
-                                            @createStudent="getStudents" />
+                                        <UTooltip text="Invoice">
+                                            <UButton color="red" :to="`/admin/invoice/${student._id}`">
+                                                <Icon name="lucide:wallet" />
+                                            </UButton>
+                                        </UTooltip>
+                                        <ManageStudent :student="student" title="" icon="lucide:edit"
+                                            @createStudent="getStudents" :isEdit="true" />
                                     </div>
                                 </td>
                                 <td class="px-6 py-4">

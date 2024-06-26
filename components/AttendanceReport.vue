@@ -1,7 +1,9 @@
 <template>
-    <UButton @click="isOpen = !isOpen" color="orange">
-        Attendance Report
-    </UButton>
+    <UTooltip text="Attendance Report">
+        <UButton @click="isOpen = !isOpen" color="amber">
+            <Icon name="lucide:calendar" size="20" />
+        </UButton>
+    </UTooltip>
 
     <UModal v-model="isOpen">
         <div class="p-5">
@@ -19,12 +21,12 @@
             </p>
 
 
-            
+
             <div class="my-3">
                 <div v-for="m in  attendances" :key="m._id">
                     <div class="flex justify-between items-center bg-white shadow-md rounded-lg p-4 mt-4">
                         <div>
-                          {{ formatDate(m.date)}}
+                            {{ formatDate(m.date) }}
                         </div>
 
                         <div class="flex gap-3">

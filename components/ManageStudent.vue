@@ -1,7 +1,6 @@
 <template>
     <UButton color="green" @click="isOpen = true">
         <Icon :name="icon" size="20" />
-        {{ title }}
     </UButton>
 
     <USlideover v-model="isOpen" :ui="{ width: 'w-screen max-w-xl' }">
@@ -143,7 +142,7 @@
                     <UInput v-model="student.password" placeholder="Password" />
                 </UFormGroup>
 
-                <UButton block color="green" class="mt-3" type="submit">{{ title == 'Edit' ? 'Update' : 'Create' }}
+                <UButton block color="green" class="mt-3" type="submit">{{ isEdit ? 'Update' : 'Create' }}
                     Student
                 </UButton>
             </UForm>
@@ -152,8 +151,9 @@
 </template>
 
 <script setup>
-const { $axios, $storage } = useNuxtApp()
+const { $axios, $storage, } = useNuxtApp()
 import { ref as storageRef, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+const { $userStore } = useNuxtApp()
 
 import StudentSchema from '~/schemas/Student.schema';
 import { hsc_batches, months, batch_times } from '~/data/batch'
@@ -165,6 +165,10 @@ const props = defineProps({
     icon: {
         type: String,
         default: 'lucide:plus'
+    },
+    isEdit: {
+        type: Boolean,
+        default: false
     },
     title: {
         type: String,
@@ -209,7 +213,8 @@ const student = ref({
         : [{
             amount: '',
             date: formatInputDate(new Date()),
-            month: ''
+            month: '',
+            collector: $userStore.user?._id
         }],
     form: props.student.form || '',
     image: props.student.image || '',
@@ -230,11 +235,10 @@ watch(student.value, (newVal) => {
 
 const emits = defineEmits(['createStudent', 'created'])
 
-const { $userStore } = useNuxtApp()
 
 const createStudent = async () => {
 
-    if (props.student._id) {
+    if (props.isEdit) {
         return updateStudent()
     }
     try {
@@ -257,20 +261,12 @@ const createStudent = async () => {
             permanent_address: '',
             password: '',
             dob: '',
-            form: ''
-
+            form: '',
         }
         emits('createStudent')
         isOpen.value = false
 
     } catch (error) {
-        // useToast().add({
-        //     id: "error",
-        //     title: "Failed to create student profile",
-        //     color: "red",
-        //     icon: "i-heroicons-information-circle",
-        //     timeout: 3000,
-        // });
     }
 }
 
