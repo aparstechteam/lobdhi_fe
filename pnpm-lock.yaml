@@ -20,6 +20,9 @@ dependencies:
   '@tinymce/tinymce-vue':
     specifier: ^5.1.1
     version: 5.1.1(vue@3.4.25)
+  amount-to-words:
+    specifier: ^5.0.0
+    version: 5.0.0
   animate.css:
     specifier: ^4.1.1
     version: 4.1.1
@@ -3053,6 +3056,10 @@ packages:
     dependencies:
       clean-stack: 2.2.0
       indent-string: 4.0.0
+
+  /amount-to-words@5.0.0:
+    resolution: {integrity: sha512-G58nJNu9bjELdspl7YdMUFMX/OxHszcvuWtqbFCF3i++NsIjdVmD6FwjuigsT2Kh3Iy6+BXeDEcviYOHv9TU8Q==}
+    dev: false
 
   /animate.css@4.1.1:
     resolution: {integrity: sha512-+mRmCTv6SbCmtYJCN4faJMNFVNN5EuCTTprDTAo7YzIGji2KADmakjVA3+8mVDkZ2Bf09vayB35lSQIex2+QaQ==}

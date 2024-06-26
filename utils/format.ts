@@ -35,10 +35,20 @@ const formatNumber = (n: number): string => {
   return Intl.NumberFormat("bn-BD").format(n);
 };
 
+const getDayTime = (d: string): string => {
+  const date = new Date(d);
+
+  return date.toLocaleDateString("en-US", {
+    weekday: "long",
+    hour: "numeric",
+    minute: "numeric",
+  });
+};
+
 const formatDateTime = (d: string): string => {
   const date = new Date(d);
 
-  return date.toLocaleDateString("bn-BD", {
+  return date.toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -95,4 +105,5 @@ export {
   openLink,
   getMonth,
   getMonthDate,
+  getDayTime,
 };

@@ -1,68 +1,67 @@
 <template>
     <div v-if="user" class=" ">
-        <div id="invoice" class="max-w-3xl mx-auto border rounded-md p-8 mt-16">
-            <div class="flex justify-between items-center">
-                <div>
-                    <img :src="logo" alt="Math Haters" class="h-12">
-                    <h1 class="text-3xl font-bold text-gray-800">Invoice</h1>
-                </div>
-                <div class="text-sm text-gray-600">
-                    <p><strong>Invoice ID:</strong> {{ user._id }}</p>
-
-                    <p class="text-sm">
-                        <strong>Student:</strong> {{ user.name }}
-                    </p>
-                    <p><strong>Roll:</strong> {{ user.roll }} </p>
-
-                    <p class="text-sm">
-                        <strong>Phone:</strong> {{ user.phone }}
-                    </p>
-                    <p class="text-sm">
-                        <strong>HSC Batch:</strong> {{ user.batch }}
-                    </p>
+        <div class="max-w-6xl mx-auto px-14 py-8 font-semibold invoice">
+            <div class="flex justify-between items-center mb-4">
+                <div class="text-3xl font-bold text-[#f1a948]">MONEY RECEIPT</div>
+                <div class="flex items-center ">
+                    <img :src="logo" alt="Lobdhi" class="h-10 px-3 border-r-2 border-black ">
+                    <img src="/ACS _ Without Admission _ Colour.png" alt="ACS" class="px-3 h-8">
                 </div>
             </div>
-            <div>
-                Batch Time: {{ user.batch_time }}
-            </div>
-            <div class="mt-8">
-                <table class="w-full border-collapse border border-gray-300">
-                    <thead>
-                        <tr class="bg-gray-200">
-                            <th class="py-2 px-4 border border-gray-300">
+            <div class="flex justify-between items-center mb-4">
+                <div>SERIAL NO: <span> {{ user._id }} </span></div>
+                <div>DATE: <span>{{ formatDate(Date.now()) }}</span> </div>
 
-                            </th>
-
-                            <th class="py-2 px-4 border border-gray-300">Date</th>
-                            <th class="py-2 px-4 border border-gray-300">Amount</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="ins, k in user.payment_emis">
-                            <td class="py-2 px-4 border border-gray-300 text-center">{{ ins.month }} </td>
-                            <td class="py-2 px-4 border border-gray-300 text-center">{{ formatDate(ins.date) }}</td>
-                            <td class="py-2 px-4 border border-gray-300 text-center"> {{ ins.amount }} BDT </td>
-
-                        </tr>
-
-
-
-                    </tbody>
-                </table>
             </div>
 
-
-            <div class="flex items-end justify-between mt-5">
-                <div class="pt-5">
-                    <p class="font-semibold balooda">
-
-                    </p>
-                </div>
-                <div class="w-48 font-semibold text-center border-gray-600 pt-2">
-                    <div class="border-b border-gray-800 caveat text-2xl">
-                        {{ user.enrolled_by.name }}
+            <div class="grid grid-cols-2 gap-20">
+                <div class="space-y-3">
+                    <div class="flex uppercase">NAME: {{ user.name }}</div>
+                    <div class="flex gap-3">
+                        HSC BATCH:
+                        <UCheckbox v-model="batch2025" label="HSC 2025" />
+                        <UCheckbox v-model="batch2026" label="HSC 2026" />
                     </div>
-                    Received By
+                    <div class="flex gap-4 items-center">
+                        <div>
+                            <p>AMOUNT</p>
+                            <p class="text-xs">(PAID)</p>
+                        </div>
+                        <span class="bg-yellow-200 px-2 py-1 rounded-lg flex-1">
+                            {{ user.payment_emis[user.payment_emis.length - 1].amount }}
+                        </span>
+                        <span>
+                            TK ONLY
+                        </span>
+                    </div>
+                    <div class="flex gap-4">
+                        <div>
+                            <p>PAID AMOUNT</p>
+                            <p class="text-xs">(IN WORD)</p>
+                        </div>
+                        <span class="underline underline-offset-2 decoration-dotted ">
+                            {{ amountToWords(user.payment_emis[user.payment_emis.length - 1].amount).numberInWords }}
+                        </span>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <div class="flex">CELL NO: {{ user.phone }} </div>
+                    <div class="uppercase">DAY/TIME: {{ getDayTime(Date.now()) }} </div>
+                    <div class="">LOBDHI ROLL: {{ user.roll }} </div>
+                </div>
+            </div>
+            <div class="flex items-end justify-between ">
+                <div class="w-48 font-semibold text-center border-gray-600 mt-12 ">
+                    <div class="border-b border-gray-800 caveat text-2xl">
+
+                    </div>
+                    AUTHORISED BY
+                </div>
+                <div class="w-48 font-semibold text-center border-gray-600 mt-12">
+                    <div class="border-b border-gray-800 caveat text-2xl">
+
+                    </div>
+                    RECEIVED BY
                 </div>
             </div>
         </div>
@@ -81,6 +80,7 @@
     </div>
 </template>
 <script setup>
+import { amountToWords } from "amount-to-words"
 import { logo } from '~/data/config'
 import html2pdf from 'html2pdf.js'
 definePageMeta({
@@ -93,10 +93,14 @@ const route = useRoute()
 const { $axios } = useNuxtApp()
 
 const user = ref(null)
-
+const batch2025 = ref(false)
+const batch2026 = ref(false)
 const getInvoice = async () => {
     const { data } = await $axios.get(`/auth/users/${route.params.id}`)
     user.value = data.user
+
+    batch2025.value = user.value.batch === 'HSC 2025'
+    batch2026.value = user.value.batch === 'HSC 2026'
 }
 
 onMounted(() => {
@@ -142,4 +146,11 @@ const downloadInvoice = () => {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="css" scoped>
+.invoice {
+    background-image: url('/invoice.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+</style>
